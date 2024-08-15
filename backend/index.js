@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
+import userRouter from "./routes/userRoute.js";
 
 dotenv.config();
 
@@ -8,9 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URL = process.env.MONGODB_URL;
 
-console.log("MONGODB_URL:", MONGODB_URL);
-console.log("PORT:", PORT);
+app.use(cors());
+app.use(express.json());
 
+// routes
+app.use("/api/v1/user", userRouter);
+// Connect to MongoDB
 mongoose
   .connect(MONGODB_URL)
   .then(() => {
@@ -22,3 +27,9 @@ mongoose
   .catch((error) => {
     console.error("Database connection error:", error);
   });
+
+// Error handling middleware (optional but recommended)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
