@@ -2,7 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoute.js";
+import messageRouter from "./routes/messageRoute.js";
+
 
 dotenv.config();
 
@@ -12,9 +15,13 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+
 
 // routes
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/user", messageRouter);
+
 // Connect to MongoDB
 mongoose
   .connect(MONGODB_URL)
